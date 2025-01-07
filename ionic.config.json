@@ -1,0 +1,8 @@
+{
+  "name": "unibooking",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "ee3f3b6b"
+}

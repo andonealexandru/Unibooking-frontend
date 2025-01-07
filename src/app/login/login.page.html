@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Log in</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Log in</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-card>
+    <ion-card-content>
+      <ion-input
+        type="email"
+        fill="outline"
+        label="Email"
+        labelPlacement="floating"
+        errorText="Invalid email"
+        required="true"
+        [(ngModel)]="emailValue"
+        email
+      ></ion-input>
+      <br>
+      <ion-input
+        type="password"
+        fill="outline"
+        label="Password"
+        labelPlacement="floating"
+        minlength="5"
+        errorText="Password should have at least 5 characters"
+        required="true"
+        [(ngModel)]="passwordValue"
+      ></ion-input>
+      <br>
+      <ion-button (click)="submitForm()">Submit</ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

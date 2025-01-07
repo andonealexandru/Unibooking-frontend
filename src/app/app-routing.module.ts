@@ -4,15 +4,20 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'my-reservations',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
     path: 'folder/:id',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
-  },  {
+  },
+  {
     path: 'my-reservations',
     loadChildren: () => import('./my-reservations/my-reservations.module').then( m => m.MyReservationsPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   }
 
 ];

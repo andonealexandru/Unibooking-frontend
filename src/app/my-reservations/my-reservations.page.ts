@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Reservation } from '../interfaces/Reservation';
 import type { OverlayEventDetail } from '@ionic/core';
+import { ReservationService } from '../services/ReservationService';
 
 @Component({
   selector: 'app-my-reservations',
@@ -37,7 +38,7 @@ export class MyReservationsPage implements OnInit {
   public reservationsForToday: Reservation[] = [];
   public currentReservation: Reservation | null = null;
 
-  constructor() { }
+  constructor(private reservationService : ReservationService) { }
 
   ngOnInit() {
 
@@ -109,36 +110,10 @@ export class MyReservationsPage implements OnInit {
   }
 
   initReservations() {
-    this.reservationsForToday = [
-      {
-        id: 10012,
-        date: "2024-01-06",
-        startTime: "22:30:00",
-        endTime: "10:00:00",
-        roomCode: "PIII1"
-      },
-      {
-        id: 10013,
-        date: "2024-01-06",
-        startTime: "10:01:00",
-        endTime: "11:00:00",
-        roomCode: "PIII1"
-      },
-      {
-        id: 10014,
-        date: "2024-01-06",
-        startTime: "11:00:00",
-        endTime: "15:00:00",
-        roomCode: "PIII1"
-      },
-      {
-        id: 10015,
-        date: "2024-01-06",
-        startTime: "19:00:00",
-        endTime: "20:00:00",
-        roomCode: "PIII1"
-      }
-  ];
+    this.reservationService.getMyBookings(new Date())
+    .subscribe((data: any) => {
+      this.reservationsForToday = data;
+    });
   }
 
 }

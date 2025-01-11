@@ -6,7 +6,7 @@ import { forkJoin } from 'rxjs';
 import { RoomService } from '../services/RoomService';
 import { ReservationWithPerson } from '../interfaces/Reservation';
 import { ReservationService } from '../services/ReservationService';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 
 @Component({
@@ -80,7 +80,8 @@ export class CreateReservationPage implements OnInit {
   }
 
   ngOnInit() {
-   
+    this.initData();
+    
     const sources = [
       this.buildingService.getBuildings()
     ];
@@ -104,6 +105,7 @@ export class CreateReservationPage implements OnInit {
           this.mode = 'EDIT';
           this.reservationId = queryData.id;
         }
+        else this.mode = 'ADD';
         if (!!queryData.building) {
           let buildingInList = this.buildingList.find(b => b.code == queryData.building);
           if (!!buildingInList) {
@@ -113,6 +115,37 @@ export class CreateReservationPage implements OnInit {
         }
       });
     });
+  }
+
+  public initData() {
+    this.buildingList = [];
+    this.roomList = [];
+    this.selectedBuilding = null;
+    this.selectedRoom = null;
+    let date = new Date();
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    this.today = date.toISOString().split('.')[0];
+    date.setUTCHours(0,0,0,0);
+
+    this.newReservation = {
+      room: null,
+      date: date.toISOString().split('.')[0],
+      startHour: this.today,
+      endHour: this.today
+    };
+
+    this.reservationInfo = {
+      previousReservation: null,
+      nextReservation: null,
+      reservationsOverlapping: [],
+    };
+
+    this.isPreviousModalOpen = false;
+    this.isOverlappingModalOpen = false;
+    this.isNextModalOpen = false;
+
+    this.mode = 'ADD';
+    this.reservationId = null;
   }
 
   public async getRoomsForSelectedBuilding(roomId : string | null) {

@@ -103,15 +103,7 @@ export class MyReservationsPage implements OnInit {
         console.log("edit", this.selectedReservationId);
         // date=2025-01-12T00:00:00&start=2025-01-11T19:00:23&end=2025-01-11T20:00:23&building=10000&room=10000&id=1000
         let selectedReservation = this.findReservation(this.selectedReservationId);
-        if (selectedReservation == null) {
-          if (this.reservationReadyForCheckIn != null && this.selectedReservationId == this.reservationReadyForCheckIn.id) {
-            selectedReservation = this.reservationReadyForCheckIn;
-          }
-          else if (this.activeReservation != null && this.selectedReservationId == this.activeReservation.id) {
-            selectedReservation = this.activeReservation;
-          }
-          else break;
-        }
+        if (selectedReservation == null) break;
 
         this.router.navigate(['/create-reservation'],
           { queryParams: {
@@ -146,7 +138,18 @@ export class MyReservationsPage implements OnInit {
 
   findReservation(id: number | null) {
     if (id == null) return null;
-    return this.reservations.find(r => r.id == id);
+    let r = this.reservations.find(r => r.id == id);
+
+    if (r == null) {
+      if (this.reservationReadyForCheckIn != null && id == this.reservationReadyForCheckIn.id) {
+        r = this.reservationReadyForCheckIn;
+      }
+      else if (this.activeReservation != null && id == this.activeReservation.id) {
+        r = this.activeReservation;
+      }
+    }
+    
+    return r;
   }
 
   openActionSheet(id: number) {
@@ -154,7 +157,7 @@ export class MyReservationsPage implements OnInit {
     console.log("Open" + id)
 
     let selectedReservation = this.findReservation(id);
-    if (selectedReservation != null && selectedReservation.status === 'CANCELED') {
+    if (selectedReservation == null || selectedReservation.status === 'CANCELED' || selectedReservation.status === 'FINISHED') {
       console.log(selectedReservation);
       return;
     }

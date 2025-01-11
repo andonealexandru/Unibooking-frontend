@@ -102,12 +102,18 @@
             <ion-item>
               <ion-label>Capacity : <b>{{newReservation.room.capacity}}</b></ion-label>
             </ion-item>
-            <ion-item>
-              <ion-label>Workstations : <b>TBD</b></ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label>Number of workstations : <b>TBD</b></ion-label>
-            </ion-item>
+            @if (newReservation.room.workstationType != null) {
+              <ion-item>
+                <ion-label>Workstations : <b>{{newReservation.room.workstationType}}</b></ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>Number of workstations : <b>{{newReservation.room.workstationCount}}</b></ion-label>
+              </ion-item>
+            } @else {
+              <ion-item>
+                <ion-label>No workstations in this room.</ion-label>
+              </ion-item>
+            }
           </ion-list>
 
           @if (reservationInfo.reservationsOverlapping.length === 0) {

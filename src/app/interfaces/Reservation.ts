@@ -6,6 +6,8 @@ export interface Reservation {
     startTime: string;
     endTime: string;
     roomCode: string;
+    buildingCode: string;
+    status: string;
 }
 
 export interface ReservationWithPerson {
@@ -14,6 +16,7 @@ export interface ReservationWithPerson {
     startTime: string;
     endTime: string;
     roomCode: string;
+    buildingCode: string;
     status: string;
     person: User;
 }

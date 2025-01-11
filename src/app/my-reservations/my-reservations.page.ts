@@ -3,6 +3,7 @@ import { Reservation } from '../interfaces/Reservation';
 import type { OverlayEventDetail } from '@ionic/core';
 import { ReservationService } from '../services/ReservationService';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-reservations',
@@ -46,7 +47,7 @@ export class MyReservationsPage implements OnInit {
   public activeReservation: Reservation | null = null;
   public reservationReadyForCheckIn: Reservation | null = null;
   
-  constructor(private reservationService : ReservationService) {
+  constructor(private reservationService : ReservationService, public router: Router) {
     this.currentActionSheetButtons = this.actionSheetButtons;
   }
 
@@ -82,6 +83,21 @@ export class MyReservationsPage implements OnInit {
         break;
       case 'edit':
         console.log("edit", this.selectedReservationId);
+        // date=2025-01-12T00:00:00&start=2025-01-11T19:00:23&end=2025-01-11T20:00:23&building=10000&room=10000&id=1000
+        let selectedReservation = this.findReservation(this.selectedReservationId);
+        if (selectedReservation == null) break;
+
+        this.router.navigate(['/create-reservation'],
+          { queryParams: {
+            date: selectedReservation.date + 'T00:00:00',
+            start: selectedReservation.date + 'T' + selectedReservation.startTime + ':00',
+            end: selectedReservation.date + 'T' + selectedReservation.endTime + ':00',
+            building: selectedReservation.buildingCode,
+            room: selectedReservation.roomCode,
+            id: selectedReservation.id
+          }}
+        )
+
         break;
       case 'delete':
         console.log("delete", this.selectedReservationId);
@@ -94,6 +110,11 @@ export class MyReservationsPage implements OnInit {
 
   removeActiveReservationsFromList() {
     this.reservations = this.reservations.filter((item) => item.id !== this.activeReservation?.id && item.id !== this.reservationReadyForCheckIn?.id);
+  }
+
+  findReservation(id: number | null) {
+    if (id == null) return null;
+    return this.reservations.find(r => r.id == id);
   }
 
   openActionSheet(id: number) {

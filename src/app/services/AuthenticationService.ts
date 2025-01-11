@@ -19,14 +19,22 @@ import { environment } from 'src/environments/environment';
       return this.http.get(this.apiUrl + "/current-user", {headers});
     }
 
+    public retrieveCurrentUserDataResponse() {
+      let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+      return this.http.get(this.apiUrl + "/current-user", {headers, observe: 'response'});
+    }
+
     public isLoggedIn() {
       if (localStorage.getItem('token') == null || localStorage.getItem('user') == null)
         return false;
 
-      this.retrieveCurrentUserData().subscribe(response => {
-        //console.log(response.status)
-      })
+      return this.retrieveCurrentUserDataResponse().subscribe(response => {
+        if (response.status !== 200) {
+          return false;
+        }
 
-      return true;
+        localStorage.setItem('user', JSON.stringify(response.body));
+        return true;
+      })
     }
   }

@@ -3,7 +3,6 @@ import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../services/AuthenticationService';
-import { concatMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +18,12 @@ export class LoginPage implements OnInit {
   constructor(public menuCtrl: MenuController, public router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+
+    if (this.authenticationService.isLoggedIn()) {
+      this.router.navigate(['/my-reservations']);
+      return;
+    }
+
     this.menuCtrl.enable(false);
   }
 

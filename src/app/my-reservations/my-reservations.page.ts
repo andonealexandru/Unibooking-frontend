@@ -3,7 +3,7 @@ import { Reservation } from '../interfaces/Reservation';
 import type { OverlayEventDetail } from '@ionic/core';
 import { ReservationService } from '../services/ReservationService';
 import { forkJoin } from 'rxjs';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-reservations',
@@ -53,7 +53,11 @@ export class MyReservationsPage implements OnInit {
 
   ngOnInit() {
     
-    this.refreshAllReservations();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd && event.url === '/my-reservations') {
+        this.refreshAllReservations();
+      }
+    });
 
   }
 
@@ -99,7 +103,15 @@ export class MyReservationsPage implements OnInit {
         console.log("edit", this.selectedReservationId);
         // date=2025-01-12T00:00:00&start=2025-01-11T19:00:23&end=2025-01-11T20:00:23&building=10000&room=10000&id=1000
         let selectedReservation = this.findReservation(this.selectedReservationId);
-        if (selectedReservation == null) break;
+        if (selectedReservation == null) {
+          if (this.reservationReadyForCheckIn != null && this.selectedReservationId == this.reservationReadyForCheckIn.id) {
+            selectedReservation = this.reservationReadyForCheckIn;
+          }
+          else if (this.activeReservation != null && this.selectedReservationId == this.activeReservation.id) {
+            selectedReservation = this.activeReservation;
+          }
+          else break;
+        }
 
         this.router.navigate(['/create-reservation'],
           { queryParams: {

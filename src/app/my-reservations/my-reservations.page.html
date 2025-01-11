@@ -19,28 +19,14 @@
       <ion-list-header>
         <ion-label>Check in</ion-label>
       </ion-list-header>
-      <ion-card color="warning" (click)="openActionSheet(reservationReadyForCheckIn.id)">
-        <ion-card-header>
-          <ion-card-title>Room {{reservationReadyForCheckIn.roomCode}}</ion-card-title>
-          <ion-card-subtitle>
-            {{ reservationReadyForCheckIn.startTime }} - {{ reservationReadyForCheckIn.endTime }}
-        </ion-card-subtitle>
-        </ion-card-header>
-      </ion-card>
+      <reservation-with-room-card [reservation]="reservationReadyForCheckIn" color="warning" (click)="openActionSheet(reservationReadyForCheckIn.id)" />
     }
 
     @if (activeReservation !== null) {
       <ion-list-header>
         <ion-label>Now</ion-label>
       </ion-list-header>
-      <ion-card color="primary" (click)="openActionSheet(activeReservation.id)">
-        <ion-card-header>
-          <ion-card-title>Room {{activeReservation.roomCode}}</ion-card-title>
-          <ion-card-subtitle>
-            {{ activeReservation.startTime }} - {{ activeReservation.endTime }}
-        </ion-card-subtitle>
-        </ion-card-header>
-      </ion-card>
+      <reservation-with-room-card [reservation]="activeReservation" color="primary" (click)="openActionSheet(activeReservation.id)" />
     }
 
     <ion-list-header>
@@ -48,12 +34,7 @@
     </ion-list-header>
 
     @for (reservation of reservations; track reservation.id) {
-      <ion-card (click)="openActionSheet(reservation.id)">
-        <ion-card-header>
-          <ion-card-title>Room {{ reservation.roomCode }}</ion-card-title>
-          <ion-card-subtitle>{{ reservation.startTime }} - {{ reservation.endTime }}</ion-card-subtitle>
-        </ion-card-header>
-      </ion-card>
+      <reservation-with-room-card [reservation]="reservation" (click)="openActionSheet(reservation.id)" />
     } @empty {
       <ion-item>
         <ion-label>No reservations for today!</ion-label>

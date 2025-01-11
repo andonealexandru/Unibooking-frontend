@@ -44,4 +44,22 @@ export class ReservationService {
 
     return this.http.put(this.apiUrl + "/" + id, data, { headers: headers });
   }
+
+  public checkInReservation(id: number) {
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+    return this.http.patch(`${this.apiUrl}/${id}/check-in`, null, { headers: headers });
+  }
+
+  public checkOutReservation(id: number) {
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+    return this.http.patch(`${this.apiUrl}/${id}/check-out`, null, { headers: headers });
+  }
+
+  public cancelReservation(id: number) {
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+    return this.http.patch(`${this.apiUrl}/${id}/cancel`, null, { headers: headers });
+  }
 }

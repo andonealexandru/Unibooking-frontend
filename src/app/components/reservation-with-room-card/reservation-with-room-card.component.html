@@ -1,0 +1,24 @@
+<ion-card [color]="color">
+  <ion-card-header>
+    <ion-card-title>Room {{ reservation.roomCode }}</ion-card-title>
+    <ion-card-subtitle>
+      {{ reservation.startTime }} - {{ reservation.endTime }}
+      @if (color == '') {
+        @switch (reservation.status) {
+          @case ("CHECKED_IN") {
+            <ion-chip color="success">Checked in</ion-chip>
+          }
+          @case ("PENDING") {
+            <ion-chip color="warning">Pending</ion-chip>
+          }
+          @case ("FINISHED") {
+            <ion-chip color="primary">Finished</ion-chip>
+          }
+          @case ("CANCELED") {
+            <ion-chip color="danger">Canceled</ion-chip>
+          }
+        }
+      }
+    </ion-card-subtitle>
+  </ion-card-header>
+</ion-card>

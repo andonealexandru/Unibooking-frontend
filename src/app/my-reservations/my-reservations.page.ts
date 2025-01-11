@@ -38,7 +38,7 @@ export class MyReservationsPage implements OnInit {
       text: 'Cancel Reservation',
       role: 'destructive',
       data: {
-        action: 'delete',
+        action: 'cancel',
       },
     },
   ];
@@ -52,6 +52,12 @@ export class MyReservationsPage implements OnInit {
   }
 
   ngOnInit() {
+    
+    this.refreshAllReservations();
+
+  }
+
+  refreshAllReservations() {
     const sources = [
       this.reservationService.getMyActiveBooking(),
       this.reservationService.getMyBookingReadyForCheckIn(),
@@ -77,9 +83,17 @@ export class MyReservationsPage implements OnInit {
     switch (event.detail.data.action) {
       case 'check-in':
         console.log("check in", this.selectedReservationId);
+        if (this.selectedReservationId == null) break;
+        this.reservationService.checkInReservation(this.selectedReservationId).subscribe(() => {
+          this.refreshAllReservations();
+        });
         break;
       case 'check-out':
         console.log("check out", this.selectedReservationId);
+        if (this.selectedReservationId == null) break;
+        this.reservationService.checkOutReservation(this.selectedReservationId).subscribe(() => {
+          this.refreshAllReservations();
+        });
         break;
       case 'edit':
         console.log("edit", this.selectedReservationId);
@@ -99,13 +113,19 @@ export class MyReservationsPage implements OnInit {
         )
 
         break;
-      case 'delete':
-        console.log("delete", this.selectedReservationId);
+      case 'cancel':
+        console.log("cancel", this.selectedReservationId);
+        if (this.selectedReservationId == null) break;
+        this.reservationService.cancelReservation(this.selectedReservationId).subscribe(() => {
+          this.refreshAllReservations();
+        });
         break;
       default:
         console.log("unknown", this.selectedReservationId);
         break;
     }
+    
+    this.refreshAllReservations();
   }
 
   removeActiveReservationsFromList() {
@@ -118,6 +138,15 @@ export class MyReservationsPage implements OnInit {
   }
 
   openActionSheet(id: number) {
+
+    console.log("Open" + id)
+
+    let selectedReservation = this.findReservation(id);
+    if (selectedReservation != null && selectedReservation.status === 'CANCELED') {
+      console.log(selectedReservation);
+      return;
+    }
+
     this.isActionSheetOpen = true;
     this.selectedReservationId = id;
     if (this.reservationReadyForCheckIn?.id === id) {

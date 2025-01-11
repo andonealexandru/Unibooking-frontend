@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Reservation } from '../interfaces/Reservation';
 import type { OverlayEventDetail } from '@ionic/core';
 import { ReservationService } from '../services/ReservationService';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-my-reservations',
@@ -21,6 +22,12 @@ export class MyReservationsPage implements OnInit {
       },
     },
     {
+      text: 'Check out',
+      data: {
+        action: 'check-out',
+      },
+    },
+    {
       text: 'Edit Reservation',
       data: {
         action: 'edit',
@@ -35,16 +42,29 @@ export class MyReservationsPage implements OnInit {
     },
   ];
 
-  public reservationsForToday: Reservation[] = [];
-  public currentReservation: Reservation | null = null;
-
-  constructor(private reservationService : ReservationService) { }
+  public reservations: Reservation[] = [];
+  public activeReservation: Reservation | null = null;
+  public reservationReadyForCheckIn: Reservation | null = null;
+  
+  constructor(private reservationService : ReservationService) {
+    this.currentActionSheetButtons = this.actionSheetButtons;
+  }
 
   ngOnInit() {
+    const sources = [
+      this.reservationService.getMyActiveBooking(),
+      this.reservationService.getMyBookingReadyForCheckIn(),
+      this.reservationService.getMyBookings(new Date())
+    ];
 
-    this.initReservations();
-    this.initCurrenReservation();
-    
+    forkJoin(sources).subscribe((data: any) => {
+      this.activeReservation = data[0];
+      this.reservationReadyForCheckIn = data[1];
+      this.reservations = data[2];
+
+      this.removeActiveReservationsFromList();
+    });
+
   }
 
   logResult(event: CustomEvent<OverlayEventDetail>) {
@@ -56,6 +76,9 @@ export class MyReservationsPage implements OnInit {
     switch (event.detail.data.action) {
       case 'check-in':
         console.log("check in", this.selectedReservationId);
+        break;
+      case 'check-out':
+        console.log("check out", this.selectedReservationId);
         break;
       case 'edit':
         console.log("edit", this.selectedReservationId);
@@ -69,51 +92,52 @@ export class MyReservationsPage implements OnInit {
     }
   }
 
+  removeActiveReservationsFromList() {
+    this.reservations = this.reservations.filter((item) => item.id !== this.activeReservation?.id && item.id !== this.reservationReadyForCheckIn?.id);
+  }
+
   openActionSheet(id: number) {
     this.isActionSheetOpen = true;
     this.selectedReservationId = id;
-    if (this.currentReservation?.id === id) {
+    if (this.reservationReadyForCheckIn?.id === id) {
       this.currentActionSheetButtons = [...this.actionSheetButtons];
+      this.currentActionSheetButtons.splice(1, 1);
+    }
+    else if (this.activeReservation?.id === id) {
+      this.currentActionSheetButtons = [...this.actionSheetButtons];
+      this.currentActionSheetButtons.splice(0, 1);
     }
     else {
       this.currentActionSheetButtons = [...this.actionSheetButtons];
-      this.currentActionSheetButtons.shift();
+      this.currentActionSheetButtons.splice(0, 2);
     }
   }
 
-  initCurrenReservation() {
-
-    if (this.reservationsForToday.length == 0) return;
-
-    const now = new Date();
-
-    const firstReservation = this.reservationsForToday[0];
-    const [startHour, startMinute, startSecond] = firstReservation.startTime.split(':').map(Number);
-
-    const reservationTime = new Date();
-    reservationTime.setHours(startHour, startMinute, startSecond, 0);
-    
-    var MS_PER_MINUTE = 60000;
-    const lowerBound = new Date(now.getTime() - 10 * MS_PER_MINUTE);
-    const upperBound = new Date(now.getTime() + 10 * MS_PER_MINUTE);
-
-    const isWithinBounds = reservationTime >= lowerBound && reservationTime <= upperBound;
-
-    if (isWithinBounds) {
-      console.log("Current reservation found");
-      this.currentReservation = this.reservationsForToday[0];
-      this.reservationsForToday.shift();
-    }
-    else {
-      console.log("No current reservation!");
-    }
+  refreshReservations(selectedDate: any) {
+    const date = new Date(selectedDate);
+    this.initReservationList(date);
   }
 
-  initReservations() {
-    this.reservationService.getMyBookings(new Date())
-    .subscribe((data: any) => {
-      this.reservationsForToday = data;
-    });
+  initReservationList(date: Date) {
+    return this.reservationService.getMyBookings(date)
+      .subscribe((data: any) => {
+        this.reservations = data;
+        this.removeActiveReservationsFromList();
+      });
+  }
+
+  initReservationReadyForCheckIn() {
+    return this.reservationService.getMyBookingReadyForCheckIn()
+      .subscribe((data: any) => {
+        this.reservationReadyForCheckIn = data;
+      });
+  }
+
+  initActiveReservation() {
+    return this.reservationService.getMyActiveBooking()
+      .subscribe((data: any) => {
+        this.activeReservation = data;
+      });
   }
 
 }

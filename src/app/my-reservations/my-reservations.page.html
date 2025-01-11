@@ -14,32 +14,46 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="currentReservation !== null">
-    <ion-list-header>
-      <ion-label>Now</ion-label>
-    </ion-list-header>
-    <ion-card color="primary" (click)="openActionSheet(currentReservation.id)">
-      <ion-card-header>
-        <ion-card-title>Room {{currentReservation.roomCode}}</ion-card-title>
-        <ion-card-subtitle>
-          {{ currentReservation.startTime }} - {{ currentReservation.endTime }}
-      </ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
-  </ion-list>
-
   <ion-list>
+    @if (reservationReadyForCheckIn !== null) {
+      <ion-list-header>
+        <ion-label>Check in</ion-label>
+      </ion-list-header>
+      <ion-card color="warning" (click)="openActionSheet(reservationReadyForCheckIn.id)">
+        <ion-card-header>
+          <ion-card-title>Room {{reservationReadyForCheckIn.roomCode}}</ion-card-title>
+          <ion-card-subtitle>
+            {{ reservationReadyForCheckIn.startTime }} - {{ reservationReadyForCheckIn.endTime }}
+        </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+    }
+
+    @if (activeReservation !== null) {
+      <ion-list-header>
+        <ion-label>Now</ion-label>
+      </ion-list-header>
+      <ion-card color="primary" (click)="openActionSheet(activeReservation.id)">
+        <ion-card-header>
+          <ion-card-title>Room {{activeReservation.roomCode}}</ion-card-title>
+          <ion-card-subtitle>
+            {{ activeReservation.startTime }} - {{ activeReservation.endTime }}
+        </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+    }
+
     <ion-list-header>
-      <ion-label>Today</ion-label>
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
     </ion-list-header>
 
-    @for (reservation of reservationsForToday; track reservation.id) {
-    <ion-card (click)="openActionSheet(reservation.id)">
-      <ion-card-header>
-        <ion-card-title>Room {{ reservation.roomCode }}</ion-card-title>
-        <ion-card-subtitle>{{ reservation.startTime }} - {{ reservation.endTime }}</ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
+    @for (reservation of reservations; track reservation.id) {
+      <ion-card (click)="openActionSheet(reservation.id)">
+        <ion-card-header>
+          <ion-card-title>Room {{ reservation.roomCode }}</ion-card-title>
+          <ion-card-subtitle>{{ reservation.startTime }} - {{ reservation.endTime }}</ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
     } @empty {
       <ion-item>
         <ion-label>No reservations for today!</ion-label>
@@ -53,4 +67,14 @@
     [buttons]="currentActionSheetButtons"
     (didDismiss)="logResult($event)"></ion-action-sheet>
 
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #datePicker
+        id="datetime"
+        presentation="date"
+        (ionChange)="refreshReservations(datePicker.value); datePicker.cancel(true)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
 </ion-content>

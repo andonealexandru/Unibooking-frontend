@@ -3,6 +3,7 @@ import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../services/AuthenticationService';
+import { concatMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -25,8 +26,14 @@ export class LoginPage implements OnInit {
     this.authenticationService.login({username: this.emailValue, password: this.passwordValue})
     .subscribe((data: any) => {
       localStorage.setItem('token', data);
-      this.menuCtrl.enable(true);
-      this.router.navigate(['/my-reservations']);
+
+      this.authenticationService.retrieveCurrentUserData()
+      .subscribe((data: any) => {
+        localStorage.setItem('user', JSON.stringify(data));
+
+        this.menuCtrl.enable(true);
+        this.router.navigate(['/my-reservations']);
+      });
     });
   }
 

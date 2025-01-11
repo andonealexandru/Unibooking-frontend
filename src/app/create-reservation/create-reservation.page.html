@@ -28,7 +28,7 @@
               labelPlacement="floating"
               required="true"
               [(ngModel)]="selectedBuilding"
-              (ionChange)="getRoomsForSelectedBuilding()"
+              (ionChange)="getRoomsForSelectedBuilding(null)"
             >
           
               @for (building of buildingList; track building.id) {

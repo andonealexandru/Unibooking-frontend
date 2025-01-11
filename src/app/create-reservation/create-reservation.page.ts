@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { RoomService } from '../services/RoomService';
 import { ReservationWithPerson } from '../interfaces/Reservation';
 import { ReservationService } from '../services/ReservationService';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-reservation',
@@ -15,11 +16,14 @@ import { ReservationService } from '../services/ReservationService';
 })
 export class CreateReservationPage implements OnInit {
 
+  public today: String;
+  public mode: String;
+
+  public reservationId : number | null;
   public buildingList : Building[];
   public roomList : Room[];
   public selectedBuilding: Building | null;
   public selectedRoom : Room | null;
-  public today: String;
 
   public isPreviousModalOpen: Boolean;
   public isNextModalOpen: Boolean;
@@ -38,7 +42,10 @@ export class CreateReservationPage implements OnInit {
     reservationsOverlapping: ReservationWithPerson[]
   }
 
-  constructor(private buildingService : BuildingService, private roomService : RoomService, private reservationService : ReservationService) {
+  constructor(private buildingService : BuildingService,
+              private roomService : RoomService,
+              private reservationService : ReservationService,
+              private route : ActivatedRoute) {
     this.buildingList = [];
     this.roomList = [];
     this.selectedBuilding = null;
@@ -64,6 +71,9 @@ export class CreateReservationPage implements OnInit {
     this.isPreviousModalOpen = false;
     this.isOverlappingModalOpen = false;
     this.isNextModalOpen = false;
+
+    this.mode = 'ADD';
+    this.reservationId = null;
   }
 
   ngOnInit() {
@@ -74,18 +84,48 @@ export class CreateReservationPage implements OnInit {
 
     forkJoin(sources).subscribe((data: any) => {
       this.buildingList = data[0];
-    });
+
+      this.route.queryParams.subscribe((queryData: any) => {
+        // ?building=
+        // ?room=
+        // ?date=
+        // ?start=
+        // ?end=
+        // ?reservationId=
   
+        if (!!queryData.date) this.newReservation.date = queryData.date;
+        if (!!queryData.start) this.newReservation.startHour = queryData.start;
+        if (!!queryData.end) this.newReservation.endHour = queryData.end;
+        if (!!queryData.id) {
+          this.mode = 'EDIT';
+          this.reservationId = queryData.id;
+        }
+        if (!!queryData.building) {
+          let buildingInList = this.buildingList.find(b => b.id == queryData.building);
+          if (!!buildingInList) {
+            this.selectedBuilding = buildingInList;
+            this.getRoomsForSelectedBuilding(queryData.room);
+          }
+        }
+      });
+    });
   }
 
-  public getRoomsForSelectedBuilding() {
+  public async getRoomsForSelectedBuilding(roomId : number | null) {
     if (this.selectedBuilding == null) {
       console.log("No building selected");
       return;
     }
-    this.buildingService.getRoomsForBuilding(this.selectedBuilding.id)
+    return this.buildingService.getRoomsForBuilding(this.selectedBuilding.id)
       .subscribe((data: any) => {
         this.roomList = data;
+        if (!!roomId) {
+          let roomInList = this.roomList.find(r => r.id == roomId);
+            console.log()
+            if (!!roomInList) {
+              this.newReservation.room = roomInList;
+            }
+        }
       })
   }
 

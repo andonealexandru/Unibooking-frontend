@@ -44,7 +44,7 @@ export class CreateReservationPage implements OnInit {
   }
 
   constructor(private buildingService : BuildingService,
-              private roomService : RoomService,
+              public roomService : RoomService,
               private reservationService : ReservationService,
               private route : ActivatedRoute,
               private router: Router,

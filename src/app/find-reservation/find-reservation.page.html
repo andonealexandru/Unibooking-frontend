@@ -74,20 +74,20 @@
               <p class="timePickerDescriptor">Date: </p>
             </ion-col>
             <ion-col size="11" size-sm="5">
-              <ion-datetime-button datetime="reservationDate">
+              <ion-datetime-button datetime="finderDate">
               </ion-datetime-button>
             </ion-col>
             <ion-col size="1" >
               <p class="timePickerDescriptor">From: </p>
             </ion-col>
             <ion-col size-sm="2">
-              <ion-datetime-button datetime="reservationStartHour"></ion-datetime-button>
+              <ion-datetime-button datetime="finderStartHour"></ion-datetime-button>
             </ion-col>
             <ion-col size="1">
               <p class="timePickerDescriptor">To: </p>
             </ion-col>
             <ion-col size-sm="2">
-              <ion-datetime-button datetime="reservationEndHour"></ion-datetime-button>
+              <ion-datetime-button datetime="finderEndHour"></ion-datetime-button>
             </ion-col>
           </ion-row>
 
@@ -138,6 +138,16 @@
               />
             </ion-col>
           </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                (click)="findRooms(); isFilterMenuOpen = false;">
+                Find rooms
+              </ion-button>
+            </ion-col>
+          </ion-row>
         }
         <ion-row>
           <ion-button shape="round" size="small" style="margin: auto;" (click)="isFilterMenuOpen = !isFilterMenuOpen">
@@ -146,18 +156,50 @@
         </ion-row>
       </ion-card-content>
     </ion-card>
+
+    @for(timeslot of timeslots; track timeslot) {
+      <ion-card (click)="navigateToCreateReservationPage(timeslot)">
+        <ion-card-header>
+          <ion-card-title>Building {{timeslot.buildingCode}} - Room {{ timeslot.code }}</ion-card-title>
+          <ion-card-subtitle>
+            <b>{{ timeslot.start.split('T')[1].slice(0, -3) }} - {{ timeslot.end.split('T')[1].slice(0, -3) }}</b>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          Capacity: {{ timeslot.capacity }} 
+          
+          @if (timeslot.workstationType != null) {
+            <br>
+            {{ roomService.formatWorkstation(timeslot.workstationType) }}s: {{ timeslot.workstationCount }}
+          }
+          <!-- Workstation number: 10 <br> -->
+          <!-- <ion-list>
+            <ion-item>
+              <ion-label>Capacity</ion-label>
+              <ion-badge color="primary" slot="start"> {{ timeslot.capacity }} </ion-badge>
+            </ion-item>
+            @if (timeslot.workstationType != null) {
+              <ion-item>
+                <ion-label>{{ roomService.formatWorkstation(timeslot.workstationType) }}</ion-label>
+                <ion-badge color="tertiary" slot="start">{{ timeslot.workstationCount }} </ion-badge>
+              </ion-item>
+            }
+          </ion-list> -->
+        </ion-card-content>
+      </ion-card>
+    }
   </ion-grid>
 
   <!-- Date picker -->
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime
-        #reservationDatePicker
-        id="reservationDate"
+        #finderDatePicker
+        id="finderDate"
         presentation="date"
         required="true"
         [(ngModel)]="filters.date"
-        (ionChange)="reservationDatePicker.cancel(true)">
+        (ionChange)="finderDatePicker.cancel(true)">
       </ion-datetime>
     </ng-template>
   </ion-modal>
@@ -166,12 +208,12 @@
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime
-        #reservationStartHourPicker
-        id="reservationStartHour"
+        #finderStartHourPicker
+        id="finderStartHour"
         presentation="time"
         hourCycle="h23"
         [(ngModel)]="filters.startHour"
-        (ionChange)="this.filters.startHourChanged = true"
+        (ionChange)="this.startHourChanged = true"
         required="true">
       </ion-datetime>
     </ng-template>
@@ -181,13 +223,13 @@
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime
-        #reservationEndHourPicker
-        id="reservationEndHour"
+        #finderEndHourPicker
+        id="finderEndHour"
         presentation="time"
         hourCycle="h23"
         [min]="filters.startHour"
         [(ngModel)]="filters.endHour"
-        (ionChange)="this.filters.endHourChanged = true"
+        (ionChange)="this.endHourChanged = true"
         required="true">
       </ion-datetime>
     </ng-template>

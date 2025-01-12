@@ -1,0 +1,195 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Find a room</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Find a room</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-grid fixed="true" style="max-width: 700px;">
+    <ion-card>
+      <ion-card-content>
+        @if(isFilterMenuOpen) {
+          <!-- Building and room -->
+          <ion-row  class="ion-align-items-center">
+            <ion-col>
+              <ion-select
+                type="text"
+                fill="outline"
+                label="Building"
+                interface="popover"
+                labelPlacement="floating"
+                [(ngModel)]="filters.building"
+                (ionChange)="getRoomsForSelectedBuilding()"
+              >
+            
+              @for(building of options.buildings; track building.id) {
+                <ion-select-option [value]="building"> {{building.code}} </ion-select-option>
+              }
+
+              @if (filters.building != null) {
+                <ion-button fill="clear" slot="end" (click)="filters.building = null; options.rooms = []">
+                  <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+                </ion-button>
+              }
+              </ion-select>
+            </ion-col>
+            <ion-col>
+              <ion-select
+                type="text"
+                fill="outline"
+                label="Room"
+                interface="popover"
+                labelPlacement="floating"
+                [disabled]="options.rooms.length == 0"
+                [(ngModel)]="filters.room"
+              >
+            
+              @for(room of options.rooms; track room.id) {
+                <ion-select-option [value]="room"> {{room.code}} </ion-select-option>
+              }
+
+              @if (filters.room != null) {
+                <ion-button fill="clear" slot="end" (click)="filters.room = null">
+                  <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+                </ion-button>
+              }
+
+              </ion-select>
+            </ion-col>
+          </ion-row>
+
+          <!-- Date and duration -->
+          <ion-row class="ion-align-items-center">
+            <ion-col size="1">
+              <p class="timePickerDescriptor">Date: </p>
+            </ion-col>
+            <ion-col size="11" size-sm="5">
+              <ion-datetime-button datetime="reservationDate">
+              </ion-datetime-button>
+            </ion-col>
+            <ion-col size="1" >
+              <p class="timePickerDescriptor">From: </p>
+            </ion-col>
+            <ion-col size-sm="2">
+              <ion-datetime-button datetime="reservationStartHour"></ion-datetime-button>
+            </ion-col>
+            <ion-col size="1">
+              <p class="timePickerDescriptor">To: </p>
+            </ion-col>
+            <ion-col size-sm="2">
+              <ion-datetime-button datetime="reservationEndHour"></ion-datetime-button>
+            </ion-col>
+          </ion-row>
+
+          <!-- Capacity and Workstations -->
+          <ion-row  class="ion-align-items-center">
+            <ion-col>
+              <ion-select
+                type="number"
+                fill="outline"
+                label="Workstation"
+                interface="popover"
+                labelPlacement="floating"
+                [(ngModel)]="filters.workstationType"
+              >
+
+              @for (workstation of options.workstations; track workstation) {
+                <ion-select-option [value]="workstation"> {{roomService.formatWorkstation(workstation)}} </ion-select-option>
+              }
+
+              @if (filters.workstationType != null) {
+                <ion-button fill="clear" slot="end" (click)="filters.workstationType = null">
+                  <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+                </ion-button>
+              }
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row  class="ion-align-items-center">
+            <ion-col>
+              <ion-input
+                type="number"
+                fill="outline"
+                label="Capacity"
+                interface="popover"
+                labelPlacement="floating"
+                [clearInput]="true"
+              />
+            </ion-col>
+            <ion-col>
+              <ion-input
+                type="text"
+                fill="outline"
+                label="Workstation nr."
+                interface="popover"
+                labelPlacement="floating"
+                [disabled]="filters.workstationType == null"
+                [clearInput]="true"
+              />
+            </ion-col>
+          </ion-row>
+        }
+        <ion-row>
+          <ion-button shape="round" size="small" style="margin: auto;" (click)="isFilterMenuOpen = !isFilterMenuOpen">
+            <ion-icon slot="icon-only" [name]="isFilterMenuOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+          </ion-button>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ion-grid>
+
+  <!-- Date picker -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #reservationDatePicker
+        id="reservationDate"
+        presentation="date"
+        required="true"
+        [(ngModel)]="filters.date"
+        (ionChange)="reservationDatePicker.cancel(true)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Start hour -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #reservationStartHourPicker
+        id="reservationStartHour"
+        presentation="time"
+        hourCycle="h23"
+        [(ngModel)]="filters.startHour"
+        (ionChange)="this.filters.startHourChanged = true"
+        required="true">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <!-- End hour -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #reservationEndHourPicker
+        id="reservationEndHour"
+        presentation="time"
+        hourCycle="h23"
+        [min]="filters.startHour"
+        [(ngModel)]="filters.endHour"
+        (ionChange)="this.filters.endHourChanged = true"
+        required="true">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>

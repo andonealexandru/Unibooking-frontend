@@ -43,4 +43,17 @@ export class RoomService {
             headers: headers
         });
     }
+
+    public getWorkstationTypes() {
+        let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+        return this.http.get(`${this.apiurl}workstation-types`, {headers});
+    }
+
+    public formatWorkstation(input: String) {
+        return input
+            .toLowerCase() // Convert to lowercase: "something_bla_bla"
+            .split('_')    // Split by underscores: ["something", "bla", "bla"]
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+            .join(' ');
+    }
 }

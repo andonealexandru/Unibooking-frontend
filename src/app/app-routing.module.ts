@@ -25,9 +25,15 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'find-reservation',
+    loadChildren: () => import('./find-reservation/find-reservation.module').then( m => m.FindReservationPageModule)
+  },
+  {
     path: '**',
     redirectTo: 'login'
-  }
+  },
+  
+
 
 ];
 

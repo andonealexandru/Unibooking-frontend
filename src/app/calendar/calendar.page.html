@@ -1,0 +1,100 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Calendar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Calendar</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-grid fixed="true" style="max-width: 700px;">
+    <ion-card>
+      <ion-card-content>
+        <!-- Building and room -->
+        <ion-row  class="ion-align-items-center">
+          <ion-col>
+            <ion-select
+              type="text"
+              fill="outline"
+              label="Building"
+              interface="popover"
+              labelPlacement="floating"
+              [(ngModel)]="filters.building"
+              (ionChange)="getRoomsForSelectedBuilding()"
+            >
+          
+            @for(building of options.buildings; track building.id) {
+              <ion-select-option [value]="building"> {{building.code}} </ion-select-option>
+            }
+            </ion-select>
+          </ion-col>
+          <ion-col>
+            <ion-select
+              type="text"
+              fill="outline"
+              label="Room"
+              interface="popover"
+              labelPlacement="floating"
+              [disabled]="options.rooms.length == 0"
+              [(ngModel)]="filters.room"
+              (ionChange)="fetchCalendar()"
+            >
+          
+            @for(room of options.rooms; track room.id) {
+              <ion-select-option [value]="room"> {{room.code}} </ion-select-option>
+            }
+            </ion-select>
+          </ion-col>
+        </ion-row>
+
+        <!-- Date and duration -->
+        <ion-row class="ion-align-items-center">
+          <ion-col style="display: flex; align-items: center; justify-content: center;">
+            <ion-button
+              size="small"
+              color="light"
+              style="margin-right: 10px;"
+              (click)="minusOneDay(); fetchCalendar()">
+              <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+            <ion-datetime-button datetime="calendarDate">
+            </ion-datetime-button>
+            <ion-button
+              size="small"
+              color="light"
+              style="margin-left: 10px;"
+              (click)="plusOneDay(); fetchCalendar()">
+              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+
+    @for (entry of calendar; track entry.id) {
+      <reservation-with-person-card [reservation]="entry" />
+    }
+  </ion-grid>
+
+  <!-- Date picker -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #calendarDatePicker
+        id="calendarDate"
+        presentation="date"
+        required="true"
+        [(ngModel)]="filters.date"
+        (ionChange)="fetchCalendar(); calendarDatePicker.cancel(true)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>

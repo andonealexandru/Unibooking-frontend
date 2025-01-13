@@ -26,15 +26,19 @@ const routes: Routes = [
   },
   {
     path: 'find-reservation',
-    loadChildren: () => import('./find-reservation/find-reservation.module').then( m => m.FindReservationPageModule)
+    loadChildren: () => import('./find-reservation/find-reservation.module').then( m => m.FindReservationPageModule),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'calendar',
+    loadChildren: () => import('./calendar/calendar.module').then( m => m.CalendarPageModule),
+    canActivate: [authGuard],
   },
   {
     path: '**',
     redirectTo: 'login'
   },
   
-
-
 ];
 
 @NgModule({

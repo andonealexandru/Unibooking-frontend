@@ -44,6 +44,17 @@ export class RoomService {
         });
     }
 
+    public getBookingsForRoomForDate(id: number, date: String) {
+      let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+      return this.http.get(this.apiurl + id + '/bookings', {
+          params: {
+              date: date.split('T')[0],
+          },
+          headers: headers
+      });
+  }
+
     public getWorkstationTypes() {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
         return this.http.get(`${this.apiurl}workstation-types`, {headers});

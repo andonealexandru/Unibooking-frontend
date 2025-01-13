@@ -190,6 +190,7 @@
         presentation="time"
         hourCycle="h23"
         required="true"
+        minuteValues="0,30"
         [(ngModel)]="newReservation.startHour"
         (ionChange)="getReservationInfo()">
       </ion-datetime>
@@ -205,6 +206,7 @@
         presentation="time"
         hourCycle="h23"
         required="true"
+        minuteValues="0,30"
         [min]="newReservation.startHour"
         [(ngModel)]="newReservation.endHour"
         (ionChange)="getReservationInfo()">

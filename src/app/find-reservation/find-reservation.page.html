@@ -212,6 +212,7 @@
         id="finderStartHour"
         presentation="time"
         hourCycle="h23"
+        minuteValues="0,30"
         [(ngModel)]="filters.startHour"
         (ionChange)="this.startHourChanged = true"
         required="true">
@@ -227,6 +228,7 @@
         id="finderEndHour"
         presentation="time"
         hourCycle="h23"
+        minuteValues="0,30"
         [min]="filters.startHour"
         [(ngModel)]="filters.endHour"
         (ionChange)="this.endHourChanged = true"

@@ -1,6 +1,6 @@
 <ion-card>
   <ion-card-header>
-    <ion-card-title>{{ reservation.person.firstName }} {{ reservation.person.lastName }} ({{ reservation.person.role }})</ion-card-title>
+    <ion-card-title>{{ reservation.person.firstName }} {{ reservation.person.lastName }} {{ getNameByRole(reservation.person.role) }}</ion-card-title>
     <ion-card-subtitle>
       {{ reservation.startTime }} - {{ reservation.endTime }}
       @switch (reservation.status) {
@@ -12,6 +12,9 @@
         }
         @case ("FINISHED") {
           <ion-chip color="primary">Finished</ion-chip>
+        }
+        @case ("CANCELED") {
+          <ion-chip color="danger">Canceled</ion-chip>
         }
       }
     </ion-card-subtitle>

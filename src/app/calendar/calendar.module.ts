@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateReservationPageRoutingModule } from './create-reservation-routing.module';
+import { CalendarPageRoutingModule } from './calendar-routing.module';
 
-import { CreateReservationPage } from './create-reservation.page';
+import { CalendarPage } from './calendar.page';
 import { ReservationWithPersonCardComponent } from '../components/reservation-with-person-card/reservation-with-person-card.component';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { ReservationWithPersonCardComponent } from '../components/reservation-wi
     CommonModule,
     FormsModule,
     IonicModule,
-    CreateReservationPageRoutingModule,
+    CalendarPageRoutingModule,
     ReservationWithPersonCardComponent
   ],
-  declarations: [CreateReservationPage]
+  declarations: [CalendarPage]
 })
-export class CreateReservationPageModule {}
+export class CalendarPageModule {}

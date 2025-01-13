@@ -267,5 +267,20 @@ export class CreateReservationPage implements OnInit {
 
   }
 
+  public plusOneDay() {
+    let date = new Date(this.newReservation.date + '');
+    date.setDate(date.getDate() + 1);
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    date.setUTCHours(0,0,0,0);
+    this.newReservation.date = date.toISOString().split('.')[0];
+  }
+
+  public minusOneDay() {
+    let date = new Date(this.newReservation.date + '');
+    date.setDate(date.getDate() - 1);
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    date.setUTCHours(0,0,0,0);
+    this.newReservation.date = date.toISOString().split('.')[0];
+  }
 
 }

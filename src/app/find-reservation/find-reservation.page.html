@@ -73,9 +73,23 @@
             <ion-col size="1">
               <p class="timePickerDescriptor">Date: </p>
             </ion-col>
-            <ion-col size="11" size-sm="5">
+            <ion-col size="11" size-sm="5" style="display: flex; align-items: center; justify-content: center;">
+              <ion-button
+                size="small"
+                color="light"
+                style="margin-right: 10px;"
+                (click)="minusOneDay();">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+              </ion-button>
               <ion-datetime-button datetime="finderDate">
               </ion-datetime-button>
+              <ion-button
+                size="small"
+                color="light"
+                style="margin-left: 10px;"
+                (click)="plusOneDay();">
+                <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+              </ion-button>
             </ion-col>
             <ion-col size="1" >
               <p class="timePickerDescriptor">From: </p>
@@ -124,6 +138,7 @@
                 interface="popover"
                 labelPlacement="floating"
                 [clearInput]="true"
+                [(ngModel)]="filters.capacity"
               />
             </ion-col>
             <ion-col>
@@ -135,6 +150,7 @@
                 labelPlacement="floating"
                 [disabled]="filters.workstationType == null"
                 [clearInput]="true"
+                [(ngModel)]="filters.workstationCount"
               />
             </ion-col>
           </ion-row>

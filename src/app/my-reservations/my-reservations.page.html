@@ -29,15 +29,30 @@
       <reservation-with-room-card [reservation]="activeReservation" color="primary" (click)="openActionSheet(activeReservation.id)" />
     }
 
-    <ion-list-header>
-      <ion-datetime-button datetime="datetime"></ion-datetime-button>
-    </ion-list-header>
+    <div style="margin-left: 10px; display: flex; align-items: center; justify-content: left;">
+      <ion-button
+        size="small"
+        color="light"
+        style="margin-right: 10px;"
+        (click)="minusOneDay(); refreshReservations();">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-datetime-button datetime="datetime">
+      </ion-datetime-button>
+      <ion-button
+        size="small"
+        color="light"
+        style="margin-left: 10px;"
+        (click)="plusOneDay(); refreshReservations();">
+        <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </div >
 
     @for (reservation of reservations; track reservation.id) {
       <reservation-with-room-card [reservation]="reservation" (click)="openActionSheet(reservation.id)" />
     } @empty {
       <ion-item>
-        <ion-label>No reservations for today!</ion-label>
+        <ion-label>No reservations for this day!</ion-label>
       </ion-item>
     }
   </ion-list>
@@ -54,7 +69,8 @@
         #datePicker
         id="datetime"
         presentation="date"
-        (ionChange)="refreshReservations(datePicker.value); datePicker.cancel(true)">
+        [(ngModel)]="selectedDate"
+        (ionChange)="refreshReservations(); datePicker.cancel(true)">
       </ion-datetime>
     </ng-template>
   </ion-modal>

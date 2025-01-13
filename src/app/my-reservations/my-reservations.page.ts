@@ -15,6 +15,8 @@ export class MyReservationsPage implements OnInit {
   public isActionSheetOpen = false;
   public currentActionSheetButtons : any;
   public selectedReservationId : number | null = null;
+
+  public selectedDate : String;
   public actionSheetButtons = [
     {
       text: 'Check in',
@@ -49,6 +51,12 @@ export class MyReservationsPage implements OnInit {
   
   constructor(private reservationService : ReservationService, public router: Router) {
     this.currentActionSheetButtons = this.actionSheetButtons;
+
+    let date = new Date();
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    date.setUTCHours(0,0,0,0);
+
+    this.selectedDate = date.toISOString().split('.')[0];
   }
 
   ngOnInit() {
@@ -178,8 +186,8 @@ export class MyReservationsPage implements OnInit {
     }
   }
 
-  refreshReservations(selectedDate: any) {
-    const date = new Date(selectedDate);
+  refreshReservations() {
+    const date = new Date(this.selectedDate + '');
     this.initReservationList(date);
   }
 
@@ -203,6 +211,22 @@ export class MyReservationsPage implements OnInit {
       .subscribe((data: any) => {
         this.activeReservation = data;
       });
+  }
+
+  public plusOneDay() {
+    let date = new Date(this.selectedDate + '');
+    date.setDate(date.getDate() + 1);
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    date.setUTCHours(0,0,0,0);
+    this.selectedDate = date.toISOString().split('.')[0];
+  }
+
+  public minusOneDay() {
+    let date = new Date(this.selectedDate + '');
+    date.setDate(date.getDate() - 1);
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    date.setUTCHours(0,0,0,0);
+    this.selectedDate = date.toISOString().split('.')[0];
   }
 
 }

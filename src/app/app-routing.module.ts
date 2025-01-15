@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { alreadyAuthenticatedGuard } from './guards/already-authenticated.guard';
+import { adminGuardGuard } from './guards/admin-guard.guard';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
     path: 'calendar',
     loadChildren: () => import('./calendar/calendar.module').then( m => m.CalendarPageModule),
     canActivate: [authGuard],
+  },
+  {
+    path: 'timesheet-upload',
+    loadChildren: () => import('./timesheet-upload/timesheet-upload.module').then( m => m.TimesheetUploadPageModule),
+    canActivate: [authGuard, adminGuardGuard],
   },
   {
     path: '**',

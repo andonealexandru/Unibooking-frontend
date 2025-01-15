@@ -2,15 +2,28 @@ import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { NavController } from '@ionic/angular';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 export const alreadyAuthenticatedGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationService);
   const navigation = inject(NavController);
 
-  if (!authService.isLoggedIn()) {
-    return true;
-  }
-
-  navigation.navigateRoot('/my-reservations');
-  return false;
+  return authService.retrieveCurrentUserDataResponse().pipe(
+    switchMap((response) => {
+      console.log(response);
+      if (response.status === 200) {
+        navigation.navigateRoot('/my-reservations');
+        localStorage.setItem('user', JSON.stringify(response.body));
+        return of(false);
+      }
+      else {
+        return of(true);
+      }
+    }),
+    catchError((error) => {
+      // Handle errors properly by navigating to the login page
+      console.error('Error in auth guard:', error);
+      return of(true);
+    })
+  );
 };

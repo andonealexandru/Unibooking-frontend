@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Upload timesheet</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Upload timesheet</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid fixed="true" style="max-width: 700px; margin-top: 100px;">
+    <ion-row>
+      <ion-col size="2">
+        <p class="timePickerDescriptor">Start date: </p>
+      </ion-col>
+      <ion-col size="4">
+        <ion-datetime-button datetime="timesheetStartDate">
+        </ion-datetime-button>
+      </ion-col>
+      <ion-col size="2">
+        <p class="timePickerDescriptor">End date: </p>
+      </ion-col>
+      <ion-col size="4">
+        <ion-datetime-button datetime="timesheetEndDate">
+        </ion-datetime-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <input type="file"
+              id="file"
+              (change)="handleFileInput($event)">
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          style="margin-left: 0px;
+          margin-right: 0px;"
+          expand="block"
+          [disabled]=""
+          (click)="uploadTimesheet()"
+        >Upload timesheet</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #timesheetStartDatePicker
+        id="timesheetStartDate"
+        presentation="date"
+        required="true"
+        [isDateEnabled]="isMonday"
+        [(ngModel)]="timesheetStartDate"
+        (ionChange)="timesheetStartDatePicker.cancel(true)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #timesheetEndDatePicker
+        id="timesheetEndDate"
+        presentation="date"
+        required="true"
+        [isDateEnabled]="isSunday"
+        [(ngModel)]="timesheetEndDate"
+        (ionChange)="timesheetEndDatePicker.cancel(true)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>

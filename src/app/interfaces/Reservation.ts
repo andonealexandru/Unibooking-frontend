@@ -8,6 +8,7 @@ export interface Reservation {
     roomCode: string;
     buildingCode: string;
     status: string;
+    description: string;
 }
 
 export interface ReservationWithPerson {
@@ -18,5 +19,6 @@ export interface ReservationWithPerson {
     roomCode: string;
     buildingCode: string;
     status: string;
+    description: string;
     person: User;
 }

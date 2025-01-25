@@ -106,6 +106,17 @@
             <ion-datetime-button datetime="reservationEndHour"></ion-datetime-button>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-input
+              type="text"
+              fill="outline"
+              label="Short description"
+              labelPlacement="floating"
+              [(ngModel)]="newReservation.description"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
       </ion-card-content>
     </ion-card>
 

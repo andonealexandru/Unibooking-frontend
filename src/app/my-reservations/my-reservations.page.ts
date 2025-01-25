@@ -109,7 +109,7 @@ export class MyReservationsPage implements OnInit {
         break;
       case 'edit':
         console.log("edit", this.selectedReservationId);
-        // date=2025-01-12T00:00:00&start=2025-01-11T19:00:23&end=2025-01-11T20:00:23&building=10000&room=10000&id=1000
+        // date=2025-01-12T00:00:00&start=2025-01-11T19:00:23&end=2025-01-11T20:00:23&building=10000&room=10000&id=1000&description=sfdf
         let selectedReservation = this.findReservation(this.selectedReservationId);
         if (selectedReservation == null) break;
 
@@ -120,7 +120,8 @@ export class MyReservationsPage implements OnInit {
             end: selectedReservation.date + 'T' + selectedReservation.endTime + ':00',
             building: selectedReservation.buildingCode,
             room: selectedReservation.roomCode,
-            id: selectedReservation.id
+            id: selectedReservation.id,
+            description: selectedReservation.description
           }}
         )
 

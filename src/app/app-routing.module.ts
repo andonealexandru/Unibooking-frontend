@@ -53,6 +53,11 @@ const routes: Routes = [
     canActivate: [authGuard, adminGuardGuard],
   },
   {
+    path: 'people-manager',
+    loadChildren: () => import('./admin/people-manager/people-manager.module').then( m => m.PeopleManagerPageModule),
+    canActivate: [authGuard, adminGuardGuard],
+  },
+  {
     path: 'sign-out',
     children: [],
     canActivate: [signOutGuard]
@@ -61,7 +66,7 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'login'
   },
-  
+
 ];
 
 @NgModule({

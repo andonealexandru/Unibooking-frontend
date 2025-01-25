@@ -34,7 +34,8 @@ export class CreateReservationPage implements OnInit {
     room: Room | null,
     date: String,
     startHour: String,
-    endHour: String
+    endHour: String,
+    description: String
   };
 
   public reservationInfo: {
@@ -62,7 +63,8 @@ export class CreateReservationPage implements OnInit {
       room: null,
       date: date.toISOString().split('.')[0],
       startHour: this.today,
-      endHour: this.today
+      endHour: this.today,
+      description: ""
     };
 
     this.reservationInfo = {
@@ -89,17 +91,23 @@ export class CreateReservationPage implements OnInit {
     forkJoin(sources).subscribe((data: any) => {
       this.buildingList = data[0];
 
+      console.log("here too");
+
       this.route.queryParams.subscribe((queryData: any) => {
         // ?building=
         // ?room=
         // ?date=
         // ?start=
         // ?end=
+        // ?description=
         // ?reservationId=
+        console.log("here");
+        console.log(this.buildingList);
   
         if (!!queryData.date) this.newReservation.date = queryData.date;
         if (!!queryData.start) this.newReservation.startHour = queryData.start;
         if (!!queryData.end) this.newReservation.endHour = queryData.end;
+        if (!!queryData.description) this.newReservation.description = queryData.description;
         if (!!queryData.id) {
           this.menuCtrl.enable(false);
           this.mode = 'EDIT';
@@ -122,17 +130,8 @@ export class CreateReservationPage implements OnInit {
     this.roomList = [];
     this.selectedBuilding = null;
     this.selectedRoom = null;
-    let date = new Date();
-    date.setTime(date.getTime() + (2 * 60*60*1000));
-    this.today = date.toISOString().split('.')[0];
-    date.setUTCHours(0,0,0,0);
 
-    this.newReservation = {
-      room: null,
-      date: date.toISOString().split('.')[0],
-      startHour: this.today,
-      endHour: this.today
-    };
+    this.initNewReservation();
 
     this.reservationInfo = {
       previousReservation: null,
@@ -146,6 +145,21 @@ export class CreateReservationPage implements OnInit {
 
     this.mode = 'ADD';
     this.reservationId = null;
+  }
+
+  public initNewReservation() {
+    let date = new Date();
+    date.setTime(date.getTime() + (2 * 60*60*1000));
+    this.today = date.toISOString().split('.')[0];
+    date.setUTCHours(0,0,0,0);
+
+    this.newReservation = {
+      room: null,
+      date: date.toISOString().split('.')[0],
+      startHour: this.today,
+      endHour: this.today,
+      description: ""
+    };
   }
 
   public async getRoomsForSelectedBuilding(roomId : string | null) {
@@ -221,6 +235,7 @@ export class CreateReservationPage implements OnInit {
   }
 
   public navigateHome() {
+    this.initNewReservation();
     this.router.navigate(['/my-reservations']);
     this.menuCtrl.enable(true);
   }
@@ -244,7 +259,8 @@ export class CreateReservationPage implements OnInit {
       date: this.newReservation.date.split('T')[0],
       startTime: reservationStartTime.getHours().toString().padStart(2, '0') + ":" + reservationStartTime.getMinutes().toString().padStart(2, '0'),
       endTime: reservationEndTime.getHours().toString().padStart(2, '0') + ":" + reservationEndTime.getMinutes().toString().padStart(2, '0'),
-      roomCode: this.newReservation.room?.code
+      roomCode: this.newReservation.room?.code,
+      description: this.newReservation.description
     }).subscribe(() => {
       this.navigateHome();
     });
@@ -260,7 +276,8 @@ export class CreateReservationPage implements OnInit {
       date: this.newReservation.date.split('T')[0],
       startTime: reservationStartTime.getHours().toString().padStart(2, '0') + ":" + reservationStartTime.getMinutes().toString().padStart(2, '0'),
       endTime: reservationEndTime.getHours().toString().padStart(2, '0') + ":" + reservationEndTime.getMinutes().toString().padStart(2, '0'),
-      roomCode: this.newReservation.room?.code
+      roomCode: this.newReservation.room?.code,
+      description: this.newReservation.description
     }).subscribe(() => {
       this.navigateHome();
     });

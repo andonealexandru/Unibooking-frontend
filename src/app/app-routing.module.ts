@@ -48,6 +48,11 @@ const routes: Routes = [
     canActivate: [authGuard, adminGuardGuard],
   },
   {
+    path: 'rooms-manager',
+    loadChildren: () => import('./admin/rooms-manager/rooms-manager.module').then( m => m.RoomsManagerPageModule),
+    canActivate: [authGuard, adminGuardGuard],
+  },
+  {
     path: 'sign-out',
     children: [],
     canActivate: [signOutGuard]

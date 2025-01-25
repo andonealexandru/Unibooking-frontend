@@ -57,6 +57,7 @@ export class BuildingsManagerPage implements OnInit {
       end: this.building.end.split('T')[1]
     }).subscribe((data: any) => {
       this.refreshBuildings();
+      this.reinitializeBuilding();
     })
   }
 

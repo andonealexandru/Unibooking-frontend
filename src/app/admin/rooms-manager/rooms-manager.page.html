@@ -1,0 +1,165 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Rooms Manager</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Rooms Manager</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid fixed="true" style="max-width: 700px;">
+    <ion-card>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <ion-select
+              type="text"
+              fill="outline"
+              label="Building"
+              interface="popover"
+              labelPlacement="floating"
+              [(ngModel)]="selectedBuilding"
+              [disabled]="room.id != 0"
+              (ionChange)="getRoomsForSelectedBuilding(); reinitializeRoom();"
+            >
+              @for(building of options.buildings; track building.id) {
+                <ion-select-option [value]="building"> {{building.code}} </ion-select-option>
+              }
+            </ion-select>
+          </ion-col>
+          <ion-col size="6">
+            <ion-input
+              type="text"
+              fill="outline"
+              label="Room code"
+              labelPlacement="floating"
+              [disabled]="room.id != 0"
+              [(ngModel)]="room.code"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-select
+              type="number"
+              fill="outline"
+              label="Workstation"
+              interface="popover"
+              labelPlacement="floating"
+              [(ngModel)]="room.workstationType"
+            >
+
+            @for (workstation of options.workstations; track workstation) {
+              <ion-select-option [value]="workstation"> {{roomService.formatWorkstation(workstation)}} </ion-select-option>
+            }
+
+            @if (room.workstationType != null) {
+              <ion-button fill="clear" slot="end" (click)="room.workstationType = null; room.workstationCount = null;">
+                <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+              </ion-button>
+            }
+            </ion-select>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            <ion-input
+              type="number"
+              fill="outline"
+              label="Room capacity"
+              labelPlacement="floating"
+              [(ngModel)]="room.capacity"
+            ></ion-input>
+          </ion-col>
+          <ion-col size="6">
+            <ion-input
+              type="number"
+              fill="outline"
+              label="Workstation nr."
+              labelPlacement="floating"
+              [disabled]="room.workstationType == null"
+              [(ngModel)]="room.workstationCount"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+
+        @if (room.id == 0) {
+          <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                [disabled]="room.code == '' || room.capacity == null || selectedBuilding == null || (room.workstationType != null && room.workstationCount == null)"
+                (click)="createRoom()">
+                Create room
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        }
+        @else {
+          <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                [disabled]="room.code == '' || room.capacity == null || selectedBuilding == null"
+                (click)="updateRoom()">
+                Update room
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                color="danger"
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                (click)="deleteRoom()">
+                Delete room
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                (click)="reinitializeRoom()">
+                Cancel
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        }
+      </ion-card-content>
+    </ion-card>
+
+
+    <ion-row>
+      
+      @for(r of roomList; track r.code) {
+        <ion-col size="6" style="padding: 0px;">
+        <ion-card (click)="setRoom(r)">
+          <ion-card-content>
+            <ion-card-header>
+              <ion-card-title>{{ r.code }}</ion-card-title>
+            </ion-card-header>
+                
+            <ion-card-content>
+              {{r.capacity}} seats <br>
+              @if (r.workstationType != null) {
+                {{r.workstationCount}} {{roomService.formatWorkstation(r.workstationType) + 's'}}
+              }
+            </ion-card-content>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      }
+    
+  </ion-row>
+  </ion-grid>
+</ion-content>

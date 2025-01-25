@@ -6,14 +6,14 @@ import { environment } from "src/environments/environment";
     providedIn: 'root'
 })
 export class RoomService {
-    private apiurl = environment.url + "/rooms/";
+    private apiurl = environment.url + "/rooms";
 
     constructor(private http: HttpClient) {}
 
     public getLastBookingForRoomBefore(id: number, date: Date) {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
 
-        return this.http.get(this.apiurl + id + '/bookings/last', {
+        return this.http.get(`${this.apiurl}/${id}/bookings/last`, {
             params: {
                 before: date.toISOString().slice(0, -1),
             },
@@ -24,7 +24,7 @@ export class RoomService {
     public getFirstBookingForRoomAfter(id: number, date: Date) {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
 
-        return this.http.get(this.apiurl + id + '/bookings/first', {
+        return this.http.get(`${this.apiurl}/${id}/bookings/first`, {
             params: {
                 after: date.toISOString().slice(0, -1),
             },
@@ -35,7 +35,7 @@ export class RoomService {
     public getBookingsForRoomBetween(id: number, start: Date, end: Date) {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
 
-        return this.http.get(this.apiurl + id + '/bookings/between', {
+        return this.http.get(`${this.apiurl}/${id}/bookings/between`, {
             params: {
                 start: start.toISOString().slice(0, -1),
                 end: end.toISOString().slice(0, -1),
@@ -47,7 +47,7 @@ export class RoomService {
     public getBookingsForRoomForDate(id: number, date: String) {
       let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
 
-      return this.http.get(this.apiurl + id + '/bookings', {
+      return this.http.get(`${this.apiurl}/${id}/bookings`, {
           params: {
               date: date.split('T')[0],
           },
@@ -57,7 +57,7 @@ export class RoomService {
 
     public getWorkstationTypes() {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
-        return this.http.get(`${this.apiurl}workstation-types`, {headers});
+        return this.http.get(`${this.apiurl}/workstation-types`, {headers});
     }
 
     public formatWorkstation(input: String) {
@@ -70,7 +70,7 @@ export class RoomService {
 
     public findRoomSlots(data: any) {
         let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
-        return this.http.get(`${this.apiurl}find`, {
+        return this.http.get(`${this.apiurl}/find`, {
             params: {
                 buildingCode: data.building?.code,
                 roomCode: data.room?.code,
@@ -115,6 +115,24 @@ export class RoomService {
           params = params.set('end', data.endHour.split('T')[1].slice(0, -3));
         }
 
-        return this.http.get(`${this.apiurl}find`, { params, headers });
+        return this.http.get(`${this.apiurl}/find`, { params, headers });
       }
+
+    public createRoom(data: any) {
+      let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+      return this.http.post(this.apiurl, data, { headers: headers });
+    }
+
+    public updateRoom(id: number, data: any) {
+      let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+      return this.http.patch(`${this.apiurl}/${id}`, data, { headers: headers });
+    }
+
+    public deleteRoom(id: number) {
+      let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
+
+      return this.http.delete(`${this.apiurl}/${id}`, { headers: headers });
+    }
 }

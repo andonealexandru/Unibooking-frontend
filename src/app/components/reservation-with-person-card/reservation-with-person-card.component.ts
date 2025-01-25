@@ -20,9 +20,9 @@ export class ReservationWithPersonCardComponent implements OnInit {
 
   public getNameByRole(role: string) {
     switch (role) {
-      case 'ROLE_USER':
+      case 'STUDENT':
         return '(Student)';
-      case 'ROLE_TEACHER':
+      case 'TEACHER':
         return '(Teacher)';
       default:
         return '';

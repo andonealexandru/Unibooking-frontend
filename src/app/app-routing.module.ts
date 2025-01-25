@@ -3,6 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { alreadyAuthenticatedGuard } from './guards/already-authenticated.guard';
 import { adminGuardGuard } from './guards/admin-guard.guard';
+import { signOutGuard } from './guards/sign-out.guard';
+import { teacherGuard } from './guards/teacher.guard';
 
 const routes: Routes = [
   {
@@ -18,12 +20,12 @@ const routes: Routes = [
   {
     path: 'my-reservations',
     loadChildren: () => import('./my-reservations/my-reservations.module').then( m => m.MyReservationsPageModule),
-    canActivate: [authGuard],
+    canActivate: [authGuard, teacherGuard],
   },
   {
     path: 'create-reservation',
     loadChildren: () => import('./create-reservation/create-reservation.module').then( m => m.CreateReservationPageModule),
-    canActivate: [authGuard],
+    canActivate: [authGuard, teacherGuard],
   },
   {
     path: 'find-reservation',
@@ -39,6 +41,16 @@ const routes: Routes = [
     path: 'timesheet-upload',
     loadChildren: () => import('./timesheet-upload/timesheet-upload.module').then( m => m.TimesheetUploadPageModule),
     canActivate: [authGuard, adminGuardGuard],
+  },
+  {
+    path: 'buildings-manager',
+    loadChildren: () => import('./admin/buildings-manager/buildings-manager.module').then( m => m.BuildingsManagerPageModule),
+    canActivate: [authGuard, adminGuardGuard],
+  },
+  {
+    path: 'sign-out',
+    children: [],
+    canActivate: [signOutGuard]
   },
   {
     path: '**',

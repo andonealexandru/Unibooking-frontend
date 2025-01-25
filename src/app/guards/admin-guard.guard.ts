@@ -8,7 +8,7 @@ export const adminGuardGuard: CanActivateFn = (route, state) => {
     const navigation = inject(NavController);
   
     let userData = localStorage.getItem('user');
-    if (userData != null && JSON.parse(userData).role == 'ROLE_ADMIN')
+    if (userData != null && JSON.parse(userData).role == 'ADMIN')
       return true;
   
     navigation.navigateRoot('/my-reservations');

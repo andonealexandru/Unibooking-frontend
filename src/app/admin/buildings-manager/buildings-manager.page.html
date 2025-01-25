@@ -1,0 +1,157 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Buildings Manager</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Buildings Manager</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid fixed="true" style="max-width: 700px;">
+    <ion-card>
+      <ion-card-content>
+        <ion-row>
+          <ion-col>
+            <ion-input
+            type="text"
+            fill="outline"
+            label="Building code"
+            labelPlacement="floating"
+            [(ngModel)]="building.code"
+            [disabled]="building.id != 0"
+          ></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-input
+            type="text"
+            fill="outline"
+            label="Building address"
+            labelPlacement="floating"
+            [(ngModel)]="building.address"
+          ></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="1" >
+            <p class="timePickerDescriptor">From: </p>
+          </ion-col>
+          <ion-col size-sm="2">
+            <ion-datetime-button datetime="buildingManagerStartHour"></ion-datetime-button>
+          </ion-col>
+          <ion-col size="1">
+            <p class="timePickerDescriptor">To: </p>
+          </ion-col>
+          <ion-col size-sm="2">
+            <ion-datetime-button datetime="buildingManagerEndHour"></ion-datetime-button>
+          </ion-col>
+        </ion-row>
+        
+          @if (building.id == 0) {
+            <ion-row>
+              <ion-col>
+                <ion-button
+                  style="margin-left: 0px; margin-right: 0px;"
+                  expand="block"
+                  [disabled]="building.code == '' || building.address == ''"
+                  (click)="createBuilding()">
+                  Create building
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          }
+          @else {
+            <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                [disabled]="building.code == '' || building.address == ''"
+                (click)="updateBuilding()">
+                Update building
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                color="danger"
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                (click)="deleteBuilding()">
+                Delete building
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px;"
+                expand="block"
+                (click)="reinitializeBuilding()">
+                Cancel
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <ion-row>
+      
+        @for(b of buildingList; track b.code) {
+          <ion-col size="6" style="padding: 0px;">
+          <ion-card (click)="setBuilding(b)">
+            <ion-card-content>
+              <ion-card-header>
+                <ion-card-title>{{ b.code }}</ion-card-title>
+                <ion-card-subtitle>{{ b.start }} - {{ b.end }}</ion-card-subtitle>
+              </ion-card-header>
+                  
+              <ion-card-content>
+                {{b.address}}
+              </ion-card-content>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        }
+      
+    </ion-row>
+  </ion-grid>
+
+  <!-- Start hour -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #buildingManagerStartHourPicker
+        id="buildingManagerStartHour"
+        presentation="time"
+        hourCycle="h23"
+        minuteValues="0,30"
+        required="true"
+        [(ngModel)]="building.start">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <!-- End hour -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        #buildingManagerEndHourPicker
+        id="buildingManagerEndHour"
+        presentation="time"
+        hourCycle="h23"
+        minuteValues="0,30"
+        required="true"
+        [(ngModel)]="building.end">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>

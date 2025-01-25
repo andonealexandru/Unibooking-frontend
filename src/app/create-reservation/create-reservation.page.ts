@@ -83,7 +83,7 @@ export class CreateReservationPage implements OnInit {
     this.initData();
     
     const sources = [
-      this.buildingService.getBuildings()
+      this.buildingService.getBuildingsForMe()
     ];
 
     forkJoin(sources).subscribe((data: any) => {

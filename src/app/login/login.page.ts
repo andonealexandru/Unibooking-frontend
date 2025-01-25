@@ -19,6 +19,9 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.menuCtrl.enable(false);
+
+    this.emailValue = "";
+    this.passwordValue = "";
   }
 
   submitForm() {

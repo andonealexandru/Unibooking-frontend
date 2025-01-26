@@ -40,7 +40,7 @@
               labelPlacement="floating"
               required="true"
               [(ngModel)]="selectedBuilding"
-              (ionChange)="getRoomsForSelectedBuilding(null)"
+              (ionChange)="getRoomsForSelectedBuilding(null); newReservation.room = null;"
             >
           
               @for (building of buildingList; track building.id) {

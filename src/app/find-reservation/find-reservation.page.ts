@@ -108,11 +108,11 @@ export class FindReservationPage implements OnInit {
     }
     
     if (this.startHourChanged === false) {
-      this.filters.startHour = this.filters.startHour.slice(0, -8) + this.filters.building.start;
+      this.filters.startHour = this.filters.startHour.slice(0, -8) + this.filters.building.start + ":00";
     }
 
     if (this.endHourChanged === false) {
-      this.filters.endHour = this.filters.endHour.slice(0, -8) + this.filters.building.end;
+      this.filters.endHour = this.filters.endHour.slice(0, -8) + this.filters.building.end + ":00";
     }
 
     return this.buildingService.getRoomsForBuilding(this.filters.building.id)

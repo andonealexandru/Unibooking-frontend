@@ -1,6 +1,6 @@
 <ion-card>
   <ion-card-header style="padding-bottom: 0px;">
-    <ion-card-title>{{ reservation.person.firstName }} {{ reservation.person.lastName }} {{ getNameByRole(reservation.person.role) }}</ion-card-title>
+    <ion-card-title>{{ reservation.person.firstName }} {{ reservation.person.lastName }}</ion-card-title>
     <ion-card-subtitle>
       {{ reservation.startTime }} - {{ reservation.endTime }}
       @switch (reservation.status) {

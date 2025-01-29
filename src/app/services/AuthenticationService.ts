@@ -15,6 +15,10 @@ import { firstValueFrom } from 'rxjs';
       return this.http.post(this.apiUrl + "/login", credentials, {responseType: 'text'});
     }
 
+    public signin(credentials: any) {
+      return this.http.post(this.apiUrl + "/signin", credentials, {responseType: 'text'});
+    }
+
     public retrieveCurrentUserData() {
       let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')?.toString());
       return this.http.get(this.apiUrl + "/current-user", {headers});

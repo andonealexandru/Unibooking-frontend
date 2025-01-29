@@ -14,6 +14,9 @@ export class LoginPage implements OnInit {
 
   public emailValue = "";
   public passwordValue = "";
+  public firstName = "";
+  public lastName = "";
+  public isLogin = true;
 
   constructor(public menuCtrl: MenuController, public router: Router, private authenticationService: AuthenticationService) { }
 
@@ -22,6 +25,21 @@ export class LoginPage implements OnInit {
 
     this.emailValue = "";
     this.passwordValue = "";
+    this.firstName = "";
+    this.lastName = "";
+  }
+
+
+  createAccount() {
+    this.authenticationService.signin({
+      email: this.emailValue,
+      password: this.passwordValue,
+      firstName: this.firstName,
+      lastName: this.lastName
+    })
+    .subscribe((data: any) => {
+      this.isLogin = true;
+    });
   }
 
   submitForm() {

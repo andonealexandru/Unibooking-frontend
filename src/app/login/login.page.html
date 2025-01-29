@@ -13,34 +13,89 @@
 
 
 
-  <ion-grid fixed="true" style="margin-top: 20vh;">
+  <ion-grid fixed="true" style="margin-top: 10vh;">
     <ion-row>
       <ion-col offset-lg="3" size-lg="6"><ion-card>
-        <ion-card-content>
-          <ion-input
-            type="email"
-            fill="outline"
-            label="Email"
-            labelPlacement="floating"
-            errorText="Invalid email"
-            required="true"
-            [(ngModel)]="emailValue"
-            email
-          ></ion-input>
-          <br>
-          <ion-input
-            type="password"
-            fill="outline"
-            label="Password"
-            labelPlacement="floating"
-            minlength="5"
-            errorText="Password should have at least 5 characters"
-            required="true"
-            [(ngModel)]="passwordValue"
-          ></ion-input>
-          <br>
-          <ion-button (click)="submitForm()">Submit</ion-button>
-        </ion-card-content>
+        @if(isLogin === true) {
+          <ion-card-header>
+            Connect to your account
+          </ion-card-header>
+          <ion-card-content>
+            <ion-input
+              type="email"
+              fill="outline"
+              label="Email"
+              labelPlacement="floating"
+              errorText="Invalid email"
+              required="true"
+              [(ngModel)]="emailValue"
+              email
+            ></ion-input>
+            <br>
+            <ion-input
+              type="password"
+              fill="outline"
+              label="Password"
+              labelPlacement="floating"
+              minlength="5"
+              errorText="Password should have at least 5 characters"
+              required="true"
+              [(ngModel)]="passwordValue"
+            ></ion-input>
+            <br>
+            <ion-button (click)="submitForm()">Submit</ion-button>
+            <ion-button (click)="isLogin = false">Create new account</ion-button>
+          </ion-card-content>
+        }
+        @else {
+          <ion-card-header>
+            Create new account
+          </ion-card-header>
+          <ion-card-content>
+            <ion-input
+              type="text"
+              fill="outline"
+              label="First name"
+              labelPlacement="floating"
+              required="true"
+              [(ngModel)]="firstName"
+            ></ion-input>
+            <br>
+            <ion-input
+              type="text"
+              fill="outline"
+              label="Last name"
+              labelPlacement="floating"
+              required="true"
+              [(ngModel)]="lastName"
+            ></ion-input>
+            <br>
+            <ion-input
+              type="email"
+              fill="outline"
+              label="Email"
+              labelPlacement="floating"
+              errorText="Invalid email"
+              required="true"
+              [(ngModel)]="emailValue"
+              email
+            ></ion-input>
+            <br>
+            <ion-input
+              type="password"
+              fill="outline"
+              label="Password"
+              labelPlacement="floating"
+              minlength="5"
+              errorText="Password should have at least 5 characters"
+              required="true"
+              [(ngModel)]="passwordValue"
+            ></ion-input>
+            <br>
+            <ion-button (click)="createAccount()">Create account</ion-button>
+            <ion-button (click)="isLogin = true">Connect to existing account</ion-button>
+          </ion-card-content>
+        }
       </ion-card></ion-col>
     </ion-row>
   </ion-grid>

@@ -13,4 +13,123 @@
       <ion-title size="large">People Manager</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-grid fixed="true" style="max-width: 700px;">
+    <ion-searchbar (ionInput)="handleSearch($event)"></ion-searchbar>
+    @if (selectedUser != null) {
+      <ion-card>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6">
+              <ion-input
+                type="text"
+                fill="outline"
+                label="First name"
+                labelPlacement="floating"
+                [(ngModel)]="selectedUser.firstName"
+              ></ion-input>
+            </ion-col>
+            <ion-col size="6">
+              <ion-input
+                type="text"
+                fill="outline"
+                label="Last name"
+                labelPlacement="floating"
+                [(ngModel)]="selectedUser.lastName"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-input
+                type="text"
+                fill="outline"
+                label="Email address"
+                labelPlacement="floating"
+                [(ngModel)]="selectedUser.email"
+                email
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-input
+                type="text"
+                fill="outline"
+                label="Person code"
+                labelPlacement="floating"
+                [(ngModel)]="selectedUser.code"
+              ></ion-input>
+            </ion-col>
+            <ion-col size="6">
+              <ion-select
+                type="text"
+                fill="outline"
+                label="Role"
+                interface="popover"
+                labelPlacement="floating"
+                [(ngModel)]="selectedUser.role"
+              >
+
+              @for (role of roleOptions; track role) {
+                <ion-select-option [value]="role.value"> {{role.label}} </ion-select-option>
+              }
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-select
+                fill="outline"
+                label="Building"
+                interface="popover"
+                labelPlacement="floating"
+                [multiple]="true"
+                [(ngModel)]="selectedUser.accessibleBuildings"
+              >
+                @for(building of buildingsList; track building.id) {
+                  <ion-select-option [value]="building"> {{building.code}} </ion-select-option>
+                }
+            </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-button
+                style="margin-left: 0px; margin-right: 0px; margin-bottom: 0px;"
+                expand="block"
+                [disabled]="selectedUser.firstName == '' || selectedUser.lastName == '' || selectedUser.email == '' || (selectedUser.role == 'TEACHER' && selectedUser.code == '')"
+                (click)="updatePerson()">
+                Update person
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button color="danger"
+                style="margin-left: 0px; margin-right: 0px; margin-top: 0px;"
+                expand="block"
+                (click)="reinitializePerson()">
+                Cancel
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    }
+    @for (p of peopleList; track p.id) {
+      <ion-card (click)="selectUser(p)">
+        <ion-card-header>
+          <ion-card-title>{{p.firstName + ' ' + p.lastName + ' (' + p.role + ')'}}</ion-card-title>
+          @if (p.code == null || p.code == "") {
+            <ion-card-subtitle>No associated code</ion-card-subtitle>
+          }
+          @else {
+            <ion-card-subtitle>{{p.code}}</ion-card-subtitle>
+          }
+        </ion-card-header>
+        <ion-card-content>
+          
+        </ion-card-content>
+      </ion-card>
+    }
+  </ion-grid>
 </ion-content>
